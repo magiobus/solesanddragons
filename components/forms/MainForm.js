@@ -9,6 +9,8 @@ import Link from "next/link";
 import Footer from "@/components/common/Footer";
 import { Router, useRouter } from "next/router";
 import Image from "next/image";
+import { AuthContext } from "@/components/AuthProvider";
+import { useContext } from "react";
 
 //esta funcion tambien tiene que ir
 let phantom;

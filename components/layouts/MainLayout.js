@@ -11,6 +11,7 @@ const Layout = ({ title, description, children, ...rest }) => {
       </Head>
       <Seo subtitle={title} description={description} />
       <div className="flex flex-col w-full " {...rest}>
+        <Header />
         <div className="my-0 w-full ">{children}</div>
         <Footer />
       </div>
