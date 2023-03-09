@@ -34,8 +34,8 @@ const Footer = ({ grayBackground = false }) => {
         grayBackground ? "bg-gray-50" : "bg-white"
       }`}
     >
-      <div className="max-w-7xl  py-12 px-4 sm:px-6  lg:px-8">
-        <div className="links mt-6">
+      <div className="max-w-7xl pb-12 px-4 sm:px-6  lg:px-8">
+        <div className="links">
           <ul className="flex flex-col md:flex-row justify-center items-center space-y-2 md:space-y-0 md:space-x-8">
             {extraLinks.map((item, index) => (
               <li key={index}>
@@ -49,7 +49,7 @@ const Footer = ({ grayBackground = false }) => {
           </ul>
         </div>
 
-        <div className="mt-8  md:order-1 flex flex-col justify-center items-center ">
+        <div className="  md:order-1 flex flex-col justify-center items-center ">
           <p className="text-center text-base text-black">{copyrightLabel}</p>
           <p className="mt-1 flex flex-col items-center justify-center">
             Made With ❤️ and 🎲 by{" "}

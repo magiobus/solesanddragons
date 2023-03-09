@@ -30,7 +30,7 @@ const Select = ({
           ))}
         </select>
       </div>
-      <p className="mt-2 text-sm text-red-600">{errorMessage}</p>
+      <p className="mt-2 text-sm text-black text-left">{errorMessage}</p>
     </div>
   );
 };

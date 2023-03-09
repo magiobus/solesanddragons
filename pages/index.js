@@ -1,5 +1,6 @@
 import MainLayout from "@/components/layouts/MainLayout";
 import MainForm from "@/components/forms/MainForm";
+
 export default function Index() {
   return (
     <MainLayout>
