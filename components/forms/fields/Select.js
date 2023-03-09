@@ -11,7 +11,7 @@ const Select = ({
 
   return (
     <div className={className}>
-      <label htmlFor={name} className="block text-sm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-sm font-medium text-white">
         {label}
       </label>
       <div className="mt-1">
