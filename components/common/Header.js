@@ -8,7 +8,8 @@ import { useContext } from "react";
 
 //HEADER SETUP
 const Header = ({ fixed = false }) => {
-  const { isSignedIn, signIn, signOut } = useContext(AuthContext);
+  const { publicKey, truncatePublicKey, signIn, signOut } =
+    useContext(AuthContext);
   return (
     <Popover className={`relative bg-white `}>
       <div
@@ -20,7 +21,21 @@ const Header = ({ fixed = false }) => {
       >
         <div className="max-w-7xl mx-auto flex justify-end items-end w-full px-4 py-5 sm:px-6 sm:py-4 lg:px-8  md:space-x-10 ">
           <div className="text-right">
-            {isSignedIn ? <p>ta logeao</p> : <p>no ta logeao</p>}
+            {publicKey && (
+              <div className="flex justify-center items-center space-x-2">
+                <p className="bg-purple-600 text-white px-2 rounded-full">
+                  {truncatePublicKey}
+                </p>
+                <button
+                  className="bg-red-500 px-4 py-2 text-white"
+                  onClick={() => {
+                    signOut();
+                  }}
+                >
+                  Sign Out 🚪
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
