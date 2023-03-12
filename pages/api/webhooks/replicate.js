@@ -18,6 +18,8 @@ export default async function handler(req, res) {
     };
 
     console.info("replicate webhook is completed event", nftData);
+    //CREATE NFT HERE AND SEND TO WALLET
+
     res.status(200).json({ message: "replicate webhook is completed event" });
   } else {
     console.info("replicate webhook is not completed event");

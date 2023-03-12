@@ -26,7 +26,10 @@ export default async function handler(req, res) {
   ];
 
   try {
+    console.info("generating chatgpt stats");
     const statsString = await chatgptlib.get(messages, "json");
+
+    console.log("statsString =>", statsString);
 
     // //Image Generation Here....
     if (imageGenerator === "replicate" && statsString) {

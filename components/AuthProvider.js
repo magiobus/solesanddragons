@@ -1,5 +1,13 @@
 import React, { createContext, useState, useEffect } from "react";
-import * as Web3 from "@solana/web3.js";
+import {
+  Connection,
+  SystemProgram,
+  Transaction,
+  PublicKey,
+  LAMPORTS_PER_SOL,
+  clusterApiUrl,
+} from "@solana/web3.js";
+import bs58 from "bs58";
 import { useRouter } from "next/router";
 export const AuthContext = createContext();
 import toast from "react-hot-toast";
@@ -86,49 +94,53 @@ const AuthContextProvider = (props) => {
     try {
       //provider
       const provider = window?.phantom?.solana;
-      const { solana } = window;
 
       //connection
-      const connection = new Web3.Connection(
-        Web3.clusterApiUrl("devnet"),
-        "confirmed"
-      );
+      const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+
+      //keys
+      const fromPubkey = new PublicKey(publicKey);
+      const toPubkey = new PublicKey(magiosPublicKey);
 
       //getbalance
-      const balance = await connection.getBalance(
-        new Web3.PublicKey(publicKey)
-      );
-
-      //instruction
-      const sendSolInstruction = Web3.SystemProgram.transfer({
-        fromPubkey: new Web3.PublicKey(publicKey),
-        toPubkey: new Web3.PublicKey(magiosPublicKey),
-        lamports: Web3.LAMPORTS_PER_SOL * price, //Change this to the amount of lamports you want to send
-      });
+      const balance = await connection.getBalance(new PublicKey(publicKey));
 
       //check if it has enough balance
-      if (balance < Web3.LAMPORTS_PER_SOL * price) {
+      if (balance < LAMPORTS_PER_SOL * price) {
         toast.error("You don't have enough balance");
         return;
       }
 
-      // //transaction
-      const transaction = new Web3.Transaction().add(sendSolInstruction);
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey,
+          toPubkey,
+          lamports: LAMPORTS_PER_SOL * price, // 1 SOL
+        })
+      );
 
-      // // // Sign the transaction with your wallet
-      transaction.feePayer = publicKey;
       const { blockhash } = await connection.getLatestBlockhash();
       transaction.recentBlockhash = blockhash;
+      transaction.feePayer = fromPubkey;
 
-      // Sign the transaction with the Phantom wallet
-      // const signedTransaction = await provider.signTransaction(transaction);
-      // // Send the signed transaction to the Solana network
-      // const signature = await connection.sendRawTransaction(
-      //   signedTransaction.serialize()
-      // );
+      //sign transaction
+      const signature = await provider.signTransaction(transaction);
 
-      console.log("balance =>", balance);
-      // console.log("Transaction sent:", signature);
+      //send transaction
+      const txid = await connection.sendRawTransaction(signature.serialize());
+      console.info(`Transaction ${txid} sent`);
+
+      //wait for confirmation
+      const confirmation = await connection.confirmTransaction(txid, {
+        commitment: "singleGossip",
+      });
+
+      const { slot } = confirmation.value;
+
+      console.info(`Transaction ${txid} confirmed in block ${slot}`);
+
+      const solanaExplorerLink = `https://explorer.solana.com/tx/${txid}?cluster=devnet`;
+      return solanaExplorerLink;
     } catch (error) {
       console.error("ERROR SEND TRANSACTION", error);
       toast.error("Something went wrong sending the transaction");
