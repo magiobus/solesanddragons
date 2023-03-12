@@ -8,7 +8,7 @@ import { useContext } from "react";
 import axios from "axios";
 
 const MainForm = () => {
-  const { publicKey, signIn, signOut } = useContext(AuthContext);
+  const { publicKey, signIn, sendTransaction } = useContext(AuthContext);
 
   const {
     register,
@@ -21,24 +21,27 @@ const MainForm = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
-    try {
-      const { name, race, gender, _class } = data;
-      const { data: characterData } = await axios.post(
-        "/api/aftertransaction",
-        {
-          name,
-          race,
-          gender,
-          _class,
-        }
-      );
-      console.info("characterData =>", characterData);
-      toast.success("Your character was created successfully");
-      setSubmitted(true);
-    } catch (error) {
-      console.error("error =>", error);
-      toast.error("Something went wrong, please try again");
-    }
+    const price = 1;
+    const response = await sendTransaction(price, data);
+
+    // try {
+    //   const { name, race, gender, _class } = data;
+    //   const { data: characterData } = await axios.post(
+    //     "/api/aftertransaction",
+    //     {
+    //       name,
+    //       race,
+    //       gender,
+    //       _class,
+    //     }
+    //   );
+    //   console.info("characterData =>", characterData);
+    //   toast.success("Your character was created successfully");
+    //   setSubmitted(true);
+    // } catch (error) {
+    //   console.error("error =>", error);
+    //   toast.error("Something went wrong, please try again");
+    // }
     setIsLoading(false);
   };
 

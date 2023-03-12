@@ -1,7 +1,9 @@
 import React, { createContext, useState, useEffect } from "react";
+import * as Web3 from "@solana/web3.js";
 import { useRouter } from "next/router";
 export const AuthContext = createContext();
 import toast from "react-hot-toast";
+const magiosPublicKey = "E8fEhxvSxRfoVCAWbtab1nsimWcaWcoaAsRp4bp8X2up";
 
 const AuthContextProvider = (props) => {
   const router = useRouter();
@@ -80,6 +82,59 @@ const AuthContextProvider = (props) => {
     }
   };
 
+  const sendTransaction = async (price, data) => {
+    try {
+      //provider
+      const provider = window?.phantom?.solana;
+      const { solana } = window;
+
+      //connection
+      const connection = new Web3.Connection(
+        Web3.clusterApiUrl("devnet"),
+        "confirmed"
+      );
+
+      //getbalance
+      const balance = await connection.getBalance(
+        new Web3.PublicKey(publicKey)
+      );
+
+      //instruction
+      const sendSolInstruction = Web3.SystemProgram.transfer({
+        fromPubkey: new Web3.PublicKey(publicKey),
+        toPubkey: new Web3.PublicKey(magiosPublicKey),
+        lamports: Web3.LAMPORTS_PER_SOL * price, //Change this to the amount of lamports you want to send
+      });
+
+      //check if it has enough balance
+      if (balance < Web3.LAMPORTS_PER_SOL * price) {
+        toast.error("You don't have enough balance");
+        return;
+      }
+
+      // //transaction
+      const transaction = new Web3.Transaction().add(sendSolInstruction);
+
+      // // // Sign the transaction with your wallet
+      transaction.feePayer = publicKey;
+      const { blockhash } = await connection.getLatestBlockhash();
+      transaction.recentBlockhash = blockhash;
+
+      // Sign the transaction with the Phantom wallet
+      // const signedTransaction = await provider.signTransaction(transaction);
+      // // Send the signed transaction to the Solana network
+      // const signature = await connection.sendRawTransaction(
+      //   signedTransaction.serialize()
+      // );
+
+      console.log("balance =>", balance);
+      // console.log("Transaction sent:", signature);
+    } catch (error) {
+      console.error("ERROR SEND TRANSACTION", error);
+      toast.error("Something went wrong sending the transaction");
+    }
+  };
+
   //truncate function for public key
   const truncateWalletAddress = (address) => {
     let firstFour = address?.substring(0, 4);
@@ -89,7 +144,7 @@ const AuthContextProvider = (props) => {
 
   return (
     <AuthContext.Provider
-      value={{ publicKey, truncatePublicKey, signIn, signOut }}
+      value={{ publicKey, truncatePublicKey, signIn, signOut, sendTransaction }}
     >
       {props.children}
     </AuthContext.Provider>
