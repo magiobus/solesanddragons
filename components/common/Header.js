@@ -8,8 +8,7 @@ import { useContext } from "react";
 
 //HEADER SETUP
 const Header = ({ fixed = false }) => {
-  const { publicKey, truncatePublicKey, signIn, signOut } =
-    useContext(AuthContext);
+  const { publicKey, truncatePublicKey, signOut } = useContext(AuthContext);
   return (
     <Popover className={`relative bg-white `}>
       <div
