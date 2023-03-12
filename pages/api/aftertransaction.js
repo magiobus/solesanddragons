@@ -17,7 +17,7 @@ export default async function handler(req, res) {
     },
     {
       role: "user",
-      content: `Please generate a JSON object for my dnd v5 character. It's name is ${name}, and is a ${gender} ${race} ${_class}, it should have abilityScores, skills, equipment, features, background, personalityTraits, ideals, bonds and flaws. Please return only the JSON Object.`,
+      content: `Please generate a JSON object for my dnd v5 character. It's name is ${name}, and is a ${gender} ${race} ${_class}, it should have abilityScores, skills, equipment, features, background, personalityTraits, ideals, bonds and flaws. Remember that if the class is paladin or cleric the character should have a deity`,
     },
   ];
 
