@@ -5,6 +5,7 @@ import { useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 import { AuthContext } from "@/components/AuthProvider";
 import { useContext } from "react";
+import axios from "axios";
 
 const MainForm = () => {
   const { publicKey, signIn, signOut } = useContext(AuthContext);
@@ -19,7 +20,26 @@ const MainForm = () => {
   const [submitted, setSubmitted] = useState(false);
 
   const onSubmit = async (data) => {
-    console.log("data =>", data);
+    setIsLoading(true);
+    try {
+      const { name, race, gender, _class } = data;
+      const { data: characterData } = await axios.post(
+        "/api/aftertransaction",
+        {
+          name,
+          race,
+          gender,
+          _class,
+        }
+      );
+      console.info("characterData =>", characterData);
+      toast.success("Your character was created successfully");
+      setSubmitted(true);
+    } catch (error) {
+      console.error("error =>", error);
+      toast.error("Something went wrong, please try again");
+    }
+    setIsLoading(false);
   };
 
   return (
@@ -65,15 +85,42 @@ const MainForm = () => {
                   label="Select your Race"
                   name="race"
                   options={[
-                    { value: "human", label: "Human" },
-                    { value: "elf", label: "Elf" },
-                    { value: "dwarf", label: "Dwarf" },
-                    { value: "orc", label: "Orc" },
-                    { value: "gnome", label: "Gnome" },
-                    { value: "troll", label: "Troll" },
-                    { value: "goblin", label: "Goblin" },
-                    { value: "undead", label: "Undead" },
-                    { value: "demon", label: "Demon" },
+                    {
+                      value: "dwarf",
+                      label: "Dwarf",
+                    },
+                    {
+                      value: "elf",
+                      label: "Elf",
+                    },
+                    {
+                      value: "halfling",
+                      label: "Halfling",
+                    },
+                    {
+                      value: "human",
+                      label: "Human",
+                    },
+                    {
+                      value: "dragonborn",
+                      label: "Dragonborn",
+                    },
+                    {
+                      value: "gnome",
+                      label: "Gnome",
+                    },
+                    {
+                      value: "half-elf",
+                      label: "Half-Elf",
+                    },
+                    {
+                      value: "half-orc",
+                      label: "Half-Orc",
+                    },
+                    {
+                      value: "tiefling",
+                      label: "Tiefling",
+                    },
                   ]}
                   register={{
                     ...register("race", {
@@ -89,36 +136,66 @@ const MainForm = () => {
               <div className="my-4">
                 <Select
                   label="Select your Class"
-                  name="class"
+                  name="_class"
                   options={[
-                    { value: "warrior", label: "Warrior" },
-                    { value: "paladin", label: "Paladin" },
-                    { value: "hunter", label: "Hunter" },
-                    { value: "rogue", label: "Rogue" },
-                    { value: "priest", label: "Priest" },
                     {
-                      value: "death-knight",
-                      label: "Death Knight",
+                      value: "barbarian",
+                      label: "Barbarian",
                     },
-                    { value: "shaman", label: "Shaman" },
-                    { value: "mage", label: "Mage" },
-                    { value: "warlock", label: "Warlock" },
-                    { value: "monk", label: "Monk" },
-                    { value: "druid", label: "Druid" },
                     {
-                      value: "demon-hunter",
-                      label: "Demon Hunter",
+                      value: "bard",
+                      label: "Bard",
+                    },
+                    {
+                      value: "cleric",
+                      label: "Cleric",
+                    },
+                    {
+                      value: "druid",
+                      label: "Druid",
+                    },
+                    {
+                      value: "fighter",
+                      label: "Fighter",
+                    },
+                    {
+                      value: "monk",
+                      label: "Monk",
+                    },
+                    {
+                      value: "paladin",
+                      label: "Paladin",
+                    },
+                    {
+                      value: "ranger",
+                      label: "Ranger",
+                    },
+                    {
+                      value: "rogue",
+                      label: "Rogue",
+                    },
+                    {
+                      value: "sorcerer",
+                      label: "Sorcerer",
+                    },
+                    {
+                      value: "warlock",
+                      label: "Warlock",
+                    },
+                    {
+                      value: "wizard",
+                      label: "Wizard",
                     },
                   ]}
                   register={{
-                    ...register("class", {
+                    ...register("_class", {
                       required: {
                         value: true,
                         message: "Field is required",
                       },
                     }),
                   }}
-                  errorMessage={errors.class?.message}
+                  errorMessage={errors._class?.message}
                 />
               </div>
               <div className="my-4">
