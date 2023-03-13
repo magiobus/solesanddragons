@@ -7,7 +7,6 @@ import {
   LAMPORTS_PER_SOL,
   clusterApiUrl,
 } from "@solana/web3.js";
-import bs58 from "bs58";
 import { useRouter } from "next/router";
 export const AuthContext = createContext();
 import toast from "react-hot-toast";
@@ -17,12 +16,16 @@ const AuthContextProvider = (props) => {
   const router = useRouter();
   const [publicKey, setPublicKey] = useState(null);
   const [truncatePublicKey, setTruncatePublicKey] = useState(null);
+  const [signature, setSignature] = useState(null);
 
   //check in local storage if we already have a phantom wallet connected
   useEffect(() => {
     let key = window.localStorage.getItem("publicKey");
+    let _signature = window.localStorage.getItem("signature");
     if (!key) return;
+    if (!_signature) return;
 
+    setSignature(_signature);
     setPublicKey(key);
     setTruncatePublicKey(truncateWalletAddress(key));
   }, []);
@@ -51,7 +54,7 @@ const AuthContextProvider = (props) => {
     toast.success("Wallet connected ");
 
     //signature process
-    await signSignature(provider);
+    if (!signature) await signSignature(provider);
   };
 
   const signOut = () => {
@@ -80,6 +83,7 @@ const AuthContextProvider = (props) => {
       window.localStorage.setItem("signature", signedMessage.signature);
       window.localStorage.setItem("publicKey", signedMessage.publicKey);
       setPublicKey(signedMessage.publicKey.toString());
+      setSignature(signedMessage.signature);
       setTruncatePublicKey(
         truncateWalletAddress(signedMessage.publicKey.toString())
       );
@@ -124,10 +128,12 @@ const AuthContextProvider = (props) => {
       transaction.feePayer = fromPubkey;
 
       //sign transaction
-      const signature = await provider.signTransaction(transaction);
+      const transactionsignature = await provider.signTransaction(transaction);
 
       //send transaction
-      const txid = await connection.sendRawTransaction(signature.serialize());
+      const txid = await connection.sendRawTransaction(
+        transactionsignature.serialize()
+      );
       console.info(`Transaction ${txid} sent`);
 
       //wait for confirmation

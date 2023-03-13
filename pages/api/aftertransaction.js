@@ -26,28 +26,27 @@ export default async function handler(req, res) {
   ];
 
   try {
-    console.info("generating chatgpt stats");
+    console.info("generating chatgpt stats....");
     const statsString = await chatgptlib.get(messages, "json");
+    console.info("chatgpt data generated )>", statsString);
 
-    console.log("statsString =>", statsString);
+    // // //Image Generation Here....
+    // if (imageGenerator === "replicate" && statsString) {
+    //   const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
+    //   const negativePrompt = `${
+    //     gender === "female" ? "male" : "female"
+    //   },duplicate,blackandwhite`;
 
-    // //Image Generation Here....
-    if (imageGenerator === "replicate" && statsString) {
-      const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
-      const negativePrompt = `${
-        gender === "female" ? "male" : "female"
-      },duplicate,blackandwhite`;
+    //   const stats = JSON.parse(statsString);
+    //   const params = new URLSearchParams();
+    //   params.append("data", JSON.stringify(stats));
+    //   const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
 
-      const stats = JSON.parse(statsString);
-      const params = new URLSearchParams();
-      params.append("data", JSON.stringify(stats));
-      const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
-
-      await replicateLib.generateImage(prompt, negativePrompt, webhook);
-      res.status(200).json({ message: "Chatgpt + replicate webhook done" });
-    } else {
-      res.status(500).json({ message: "Somethhing went wrong" });
-    }
+    //   await replicateLib.generateImage(prompt, negativePrompt, webhook);
+    //   res.status(200).json({ message: "Chatgpt + replicate webhook done" });
+    // } else {
+    //   res.status(500).json({ message: "Somethhing went wrong" });
+    // }
   } catch (error) {
     console.error("error =>", error);
     res.status(500).json({ message: "probably didnt get statsString" });
