@@ -3,7 +3,7 @@ import chatgptlib from "@/lib/chatgptlib";
 import replicateLib from "@/lib/replicateLib";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://e510-186-96-37-57.ngrok.io";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://bb58-187-188-243-106.ngrok.io";
 
 export default async function handler(req, res) {
   //if is not post
@@ -11,7 +11,15 @@ export default async function handler(req, res) {
     return res.status(405).json({ message: "Method not allowed" });
   }
 
-  const { name, race, gender, _class, imageGenerator = "replicate" } = req.body;
+  const {
+    name,
+    race,
+    gender,
+    _class,
+    imageGenerator = "replicate",
+    publicKey,
+    explorerLink,
+  } = req.body;
   //Stats generation with chatgpt api
   const messages = [
     {
@@ -27,26 +35,34 @@ export default async function handler(req, res) {
 
   try {
     console.info("generating chatgpt stats....");
-    const statsString = await chatgptlib.get(messages, "json");
-    console.info("chatgpt data generated )>", statsString);
+    const statsObject = await chatgptlib.get(messages, "json");
+    console.info("chatgpt stats DONE");
 
     // // //Image Generation Here....
-    // if (imageGenerator === "replicate" && statsString) {
-    //   const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
-    //   const negativePrompt = `${
-    //     gender === "female" ? "male" : "female"
-    //   },duplicate,blackandwhite`;
+    if (imageGenerator === "replicate" && statsObject) {
+      console.info("generating Stable Difussion image....");
+      const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
+      const negativePrompt = `${
+        gender === "female" ? "male" : "female"
+      },duplicate,blackandwhite`;
 
-    //   const stats = JSON.parse(statsString);
-    //   const params = new URLSearchParams();
-    //   params.append("data", JSON.stringify(stats));
-    //   const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
+      const params = new URLSearchParams();
+      const tempobject = {
+        stats: statsObject,
+        publicKey,
+        explorerLink,
+      };
 
-    //   await replicateLib.generateImage(prompt, negativePrompt, webhook);
-    //   res.status(200).json({ message: "Chatgpt + replicate webhook done" });
-    // } else {
-    //   res.status(500).json({ message: "Somethhing went wrong" });
-    // }
+      params.append("data", JSON.stringify(tempobject));
+      const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
+
+      await replicateLib.generateImage(prompt, negativePrompt, webhook);
+      console.info("Stable Difussion JOB Sent, wiating for webhook....");
+
+      res.status(200).json({ message: "Chatgpt + replicate webhook done" });
+    } else {
+      res.status(500).json({ message: "Somethhing went wrong" });
+    }
   } catch (error) {
     console.error("error =>", error);
     res.status(500).json({ message: "probably didnt get statsString" });

@@ -9,7 +9,8 @@ import { CheckCircleIcon } from "@heroicons/react/outline";
 import axios from "axios";
 
 const MainForm = () => {
-  const { publicKey, signIn, sendTransaction } = useContext(AuthContext);
+  const { publicKey, signIn, sendTransaction, signSignature } =
+    useContext(AuthContext);
 
   const {
     register,
@@ -23,6 +24,7 @@ const MainForm = () => {
 
   const onSubmit = async (data) => {
     setIsLoading(true);
+
     setStatusText(
       "Please approve the transaction and wait for it to be confirmed, this may take a few minutes"
     );
@@ -36,20 +38,19 @@ const MainForm = () => {
         "Your transaction was successful, you will receive your NFT in your wallet in a few minutes"
       );
       setIsLoading(false);
-      toast.success("Your transaction was successful");
 
       //start generating character
       try {
+        toast.success("Your transaction was successful");
         const { name, race, gender, _class } = data;
-        const { data: characterData } = await axios.post(
-          "/api/aftertransaction",
-          {
-            name,
-            race,
-            gender,
-            _class,
-          }
-        );
+        await axios.post("/api/aftertransaction", {
+          name,
+          race,
+          gender,
+          _class,
+          publicKey,
+          explorerLink,
+        });
 
         toast.success("Your character was created successfully");
       } catch (error) {
