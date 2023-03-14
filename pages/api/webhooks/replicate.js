@@ -21,13 +21,17 @@ export default async function handler(req, res) {
       explorerLink: newData?.explorerLink,
     };
 
+    //answer to replicate webhook
+    res.status(200).json({ message: "replicate webhook answered" });
+
     console.info("Creating nft...");
     //CREATE NFT HERE AND SEND TO WALLET
-    await metaplexlib.createNFT(nftData);
-
-    res.status(200).json({ message: "replicate webhook is completed event" });
+    const nftcreated = await metaplexlib.createNFT(nftData);
+    console.info("NFT created, answering webhook");
   } else {
     console.info("replicate webhook is not completed event");
-    return;
+    res
+      .status(200)
+      .json({ message: "replicate webhook is not completed event" });
   }
 }
