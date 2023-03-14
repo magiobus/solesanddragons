@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 export const AuthContext = createContext();
 import toast from "react-hot-toast";
 const magiosPublicKey = "E8fEhxvSxRfoVCAWbtab1nsimWcaWcoaAsRp4bp8X2up";
+const SOLANA_NETWORK = process.env.NEXT_PUBLIC_SOLANA_NETWORK;
 
 const AuthContextProvider = (props) => {
   const router = useRouter();
@@ -99,7 +100,10 @@ const AuthContextProvider = (props) => {
       const provider = window?.phantom?.solana;
 
       //connection
-      const connection = new Connection(clusterApiUrl("devnet"), "confirmed");
+      const connection = new Connection(
+        clusterApiUrl(SOLANA_NETWORK),
+        "confirmed"
+      );
 
       //keys
       const fromPubkey = new PublicKey(publicKey);

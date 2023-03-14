@@ -22,7 +22,6 @@ export default async function handler(req, res) {
     };
 
     console.info("Creating nft...");
-
     //CREATE NFT HERE AND SEND TO WALLET
     await metaplexlib.createNFT(nftData);
 
