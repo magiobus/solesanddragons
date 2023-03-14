@@ -1,3 +1,5 @@
+import nftdataexample from "@/data/nftdataexample";
+
 //replicate webhook
 export default async function handler(req, res) {
   const { webhook, webhook_events_filter, output } = req.body;
@@ -10,15 +12,19 @@ export default async function handler(req, res) {
   if (webhook_events_filter.includes("completed")) {
     //get params from webhook
     const params = new URLSearchParams(webhook.split("?")[1]);
-    const stats = JSON.parse(params.get("data"));
+    const newData = JSON.parse(params.get("data"));
 
     const nftData = {
       output,
-      stats,
+      stats: newData?.stats,
+      publicKey: newData?.publicKey,
+      explorerLink: newData?.explorerLink,
     };
 
-    console.info("replicate webhook is completed event", nftData);
+    console.info("replicate webhook is completed event =>", nftData);
+
     //CREATE NFT HERE AND SEND TO WALLET
+    // await metaplexlib.createNFT(nftData);
 
     res.status(200).json({ message: "replicate webhook is completed event" });
   } else {

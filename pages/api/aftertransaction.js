@@ -39,7 +39,11 @@ export default async function handler(req, res) {
     console.info("chatgpt stats DONE");
 
     // // //Image Generation Here....
-    if (imageGenerator === "replicate" && statsObject) {
+    if (
+      imageGenerator === "replicate" &&
+      statsObject &&
+      typeof statsObject === "object"
+    ) {
       console.info("generating Stable Difussion image....");
       const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
       const negativePrompt = `${
@@ -61,6 +65,7 @@ export default async function handler(req, res) {
 
       res.status(200).json({ message: "Chatgpt + replicate webhook done" });
     } else {
+      console.error("error =>", "probably didnt get statsObject", statsObject);
       res.status(500).json({ message: "Somethhing went wrong" });
     }
   } catch (error) {
