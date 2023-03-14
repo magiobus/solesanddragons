@@ -29,7 +29,7 @@ const MainForm = () => {
       "Please approve the transaction and wait for it to be confirmed, this may take a few minutes"
     );
 
-    const price = 0.110977;
+    const price = 0.01;
 
     try {
       const explorerLink = await sendTransaction(price, data);
