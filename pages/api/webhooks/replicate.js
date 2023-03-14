@@ -1,4 +1,4 @@
-import nftdataexample from "@/data/nftdataexample";
+import metaplexlib from "@/lib/metaplexlib";
 
 //replicate webhook
 export default async function handler(req, res) {
@@ -21,10 +21,10 @@ export default async function handler(req, res) {
       explorerLink: newData?.explorerLink,
     };
 
-    console.info("replicate webhook is completed event =>", nftData);
+    console.info("Creating nft...");
 
     //CREATE NFT HERE AND SEND TO WALLET
-    // await metaplexlib.createNFT(nftData);
+    await metaplexlib.createNFT(nftData);
 
     res.status(200).json({ message: "replicate webhook is completed event" });
   } else {

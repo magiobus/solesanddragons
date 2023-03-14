@@ -3,7 +3,7 @@ import chatgptlib from "@/lib/chatgptlib";
 import replicateLib from "@/lib/replicateLib";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://bb58-187-188-243-106.ngrok.io";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://6d08-187-188-243-106.ngrok.io";
 
 export default async function handler(req, res) {
   //if is not post
@@ -59,6 +59,8 @@ export default async function handler(req, res) {
 
       params.append("data", JSON.stringify(tempobject));
       const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
+
+      console.log("webhook URL =>", webhook);
 
       await replicateLib.generateImage(prompt, negativePrompt, webhook);
       console.info("Stable Difussion JOB Sent, wiating for webhook....");
