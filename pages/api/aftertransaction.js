@@ -3,7 +3,7 @@ import chatgptlib from "@/lib/chatgptlib";
 import replicateLib from "@/lib/replicateLib";
 
 const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://6d08-187-188-243-106.ngrok.io";
+  process.env.NEXT_PUBLIC_BASE_URL || "https://7d71-187-188-243-106.ngrok.io";
 
 export default async function handler(req, res) {
   //if is not post
