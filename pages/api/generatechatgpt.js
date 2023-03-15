@@ -36,47 +36,16 @@ export default async function handler(req, res) {
   try {
     console.info("generating chatgpt stats....");
     const statsObject = await chatgptlib.get(messages, "json");
-    console.info("chatgpt stats DONE");
+    console.info("chatgpt stats DONE...");
 
-    // // //Image Generation Here....
-    if (
-      imageGenerator === "replicate" &&
-      statsObject &&
-      typeof statsObject === "object"
-    ) {
-      console.info("generating Stable Difussion image....");
-      const prompt = `face portrait of ${_class} ${gender} ${race}, dnd character illustration, 4k. `;
-      const negativePrompt = `${
-        gender === "female" ? "male" : "female"
-      },duplicate,blackandwhite`;
+    const datatoReturn = {
+      stats: statsObject,
+      publicKey,
+      explorerLink,
+      imageGenerator,
+    };
 
-      const params = new URLSearchParams();
-      const tempobject = {
-        stats: statsObject,
-        publicKey,
-        explorerLink,
-      };
-
-      params.append("data", JSON.stringify(tempobject));
-      const webhook = `${baseUrl}/api/webhooks/replicate?${params.toString()}`;
-
-      console.log("webhook URL =>", webhook);
-
-      const replicateResponse = await replicateLib.generateImage(
-        prompt,
-        negativePrompt,
-        webhook
-      );
-      console.info(
-        "Stable Difussion JOB Sent, wiating for webhook....",
-        replicateResponse
-      );
-
-      res.status(200).json({ message: "Chatgpt + replicate webhook done" });
-    } else {
-      console.error("error =>", "probably didnt get statsObject", statsObject);
-      res.status(500).json({ message: "Somethhing went wrong" });
-    }
+    res.status(200).json(datatoReturn);
   } catch (error) {
     console.error("error =>", error);
     res.status(500).json({ message: "probably didnt get statsString" });

@@ -10,8 +10,7 @@ import axios from "axios";
 const price = process.env.NEXT_PUBLIC_MINTING_PRICE;
 
 const MainForm = () => {
-  const { publicKey, signIn, sendTransaction, LAMPORTS_PER_SOL } =
-    useContext(AuthContext);
+  const { publicKey, signIn, sendTransaction } = useContext(AuthContext);
 
   const {
     register,
@@ -27,22 +26,19 @@ const MainForm = () => {
     setIsLoading(true);
 
     setStatusText(
-      "Please approve the transaction and wait for it to be confirmed, this may take a few minutes"
+      "Please approve the transaction and wait for it to be confirmed 💵 "
     );
 
     try {
       const explorerLink = await sendTransaction(price, data);
       setSolanaExplorerLink(explorerLink);
-      setStatusText(
-        "Your transaction was successful, you will receive your NFT in your wallet in a few minutes"
-      );
-      setIsLoading(false);
+      setStatusText("Generating your character stats 📈... ");
+      setIsLoading(true);
 
       //start generating character
       try {
-        toast.success("Your transaction was successful");
         const { name, race, gender, _class } = data;
-        await axios.post("/api/aftertransaction", {
+        const { data: chatgptdata } = await axios.post("/api/generatechatgpt", {
           name,
           race,
           gender,
@@ -51,7 +47,21 @@ const MainForm = () => {
           explorerLink,
         });
 
-        toast.success("Your character was created successfully");
+        console.log("chatgptdata =>", chatgptdata);
+
+        setStatusText("Generating your character image 🖼️ ... ");
+
+        setIsLoading(true);
+
+        const { data: replicateData } = await axios.post("/api/generatesd", {
+          data: chatgptdata,
+        });
+
+        console.log("replicateData =>", replicateData?.data);
+        setStatusText(
+          "You character is being minted 🎉, you will receive a NFT in your wallet soon! "
+        );
+        setIsLoading(false);
       } catch (error) {
         console.error("error =>", error);
         toast.error("Something went wrong, please try again");
@@ -71,13 +81,18 @@ const MainForm = () => {
       {publicKey ? (
         isLoading ? (
           <div className="loadingwrapper my-8">
-            <p className="font-bold text-lg mb-2">{statusText}</p>
+            <p className="font-bold text-lg mb-1">{statusText}</p>
+            <p className="text-red-600 mb-4 text-sm italic">
+              Please do not close this window or refresh the page
+            </p>
             <LoadingCircle color="#000000" />
           </div>
         ) : solanaExplorerLink ? (
           <div className="loadingwrapper my-8 flex flex-col justify-center items-center">
             <CheckCircleIcon className="h-20 w-20 text-green-500 mb-4" />
-            <p className="font-bold text-lg mb-2">{statusText}</p>
+            <p className="font-bold text-lg mb-2 break-normal break-all">
+              {statusText}
+            </p>
             <a
               href={solanaExplorerLink}
               target="_blank"
