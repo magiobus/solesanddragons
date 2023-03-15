@@ -57,9 +57,37 @@ const MainForm = () => {
           data: chatgptdata,
         });
 
-        console.log("replicateData =>", replicateData?.data);
+        const { id: jobId } = replicateData?.data;
+        setIsLoading(true);
+
+        //wait 10 seconds for replicate to generate the image
+        await new Promise((resolve) => setTimeout(resolve, 10000));
+        const { data: status } = await axios.post("/api/checkreplicatestatus", {
+          jobId,
+        });
+
+        const { output } = status;
+        let outputUrl = "";
+
+        if (output && output.length > 0) {
+          outputUrl = output[0];
+          setIsLoading(false);
+        }
+
+        console.log("outputUrl =>", outputUrl);
+        setIsLoading(true);
+        setStatusText("You character is being minted ... ");
+        const mintedData = {
+          photo: outputUrl,
+          explorerLink,
+          stats: chatgptdata.stats,
+          publicKey,
+        };
+
+        const mintresponse = await axios.post("/api/mintnft", mintedData);
+        console.log("mintresponse =>", mintresponse);
         setStatusText(
-          "You character is being minted 🎉, you will receive a NFT in your wallet soon! "
+          "You character iin minted 🎉, check your phantom wallet 👻 "
         );
         setIsLoading(false);
       } catch (error) {
@@ -70,8 +98,6 @@ const MainForm = () => {
       console.error("error =>", error);
       toast.error("Something went wrong, please try again");
     }
-
-    setIsLoading(false);
   };
 
   return (
@@ -303,5 +329,7 @@ const MainForm = () => {
     </div>
   );
 };
+
+//private functions....
 
 export default MainForm;

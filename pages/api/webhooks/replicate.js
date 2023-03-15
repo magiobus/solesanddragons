@@ -1,7 +1,7 @@
 import nc from "next-connect";
 import ncoptions from "@/config/ncoptions";
 import metaplexlib from "@/lib/metaplexlib";
-const axios = require("axios");
+// const axios = require("axios");
 const BASEURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const handler = nc(ncoptions);
@@ -20,11 +20,6 @@ handler.post(async (req, res) => {
     return res.status(400).json({ message: "Bad request" });
   }
 
-  const newUrl = `${BASEURL}/api/mintnft`;
-  console.log("new url is", newUrl);
-  axios.post(newUrl, {
-    data: req.body,
-  });
   console.log("response made to replicate");
   res.status(200).json({ message: "replicate webhook is completed event" });
 });
