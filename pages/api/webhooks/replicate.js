@@ -19,12 +19,12 @@ handler.post(async (req, res) => {
   if (!webhook || !webhook_events_filter || !output) {
     return res.status(400).json({ message: "Bad request" });
   }
+  res.status(200).json({ message: "replicate webhook is completed event" });
 
-  axios.post(`${BASEURL}/api/mintnft`, {
+  const newUrl = `${BASEURL}/api/mintnft`;
+  console.log("new url is", newUrl);
+  await axios.post(newUrl, {
     data: req.body,
   });
-
-  res.status(200).json({ message: "replicate webhook is completed event" });
-  console.log("replicate webhook is completed event");
 });
 export default handler;

@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import ncoptions from "@/config/ncoptions";
 import metaplexlib from "@/lib/metaplexlib";
-const BASEURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const handler = nc(ncoptions);
 
