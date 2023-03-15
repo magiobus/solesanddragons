@@ -14,7 +14,7 @@ handler.use(async (req, res, next) => {
 
 handler.post(async (req, res) => {
   console.log("req.body =>", req.body);
-  const { stats, explorerLink, photo, publicKey } = req.body;
+  const { stats, explorerLink, imageUrl, publicKey } = req.body;
 
   if ((!stats || !explorerLink || !photo, !publicKey)) {
     return res.status(400).json({ message: "Bad request mint nft" });
@@ -24,7 +24,7 @@ handler.post(async (req, res) => {
   //get params from webhook
 
   const nftData = {
-    output: photo,
+    imageUrl,
     stats,
     publicKey,
     explorerLink,

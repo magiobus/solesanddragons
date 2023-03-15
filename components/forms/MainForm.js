@@ -78,7 +78,7 @@ const MainForm = () => {
         setIsLoading(true);
         setStatusText("You character is being minted ... ");
         const mintedData = {
-          photo: outputUrl,
+          imageUrl: outputUrl,
           explorerLink,
           stats: chatgptdata.stats,
           publicKey,
