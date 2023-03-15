@@ -1,7 +1,8 @@
 import nc from "next-connect";
 import ncoptions from "@/config/ncoptions";
-
 import metaplexlib from "@/lib/metaplexlib";
+const axios = require("axios");
+const BASEURL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 const handler = nc(ncoptions);
 
@@ -19,29 +20,11 @@ handler.post(async (req, res) => {
     return res.status(400).json({ message: "Bad request" });
   }
 
-  //webhook_events_filter is an array of strings, need to check if it contains "completed"
-  if (webhook_events_filter.includes("completed")) {
-    //get params from webhook
-    const params = new URLSearchParams(webhook.split("?")[1]);
-    const newData = JSON.parse(params.get("data"));
+  axios.post(`${BASEURL}/api/mintnft`, {
+    data: req.body,
+  });
 
-    const nftData = {
-      output,
-      stats: newData?.stats,
-      publicKey: newData?.publicKey,
-      explorerLink: newData?.explorerLink,
-    };
-
-    //answer to replicate webhook becauyse if they not have a repsonse they are gonna try every 5 seconds.
-    //and start creating nft after 5 seconds.
-    console.log("replicate webhook is completed event");
-    await metaplexlib.createNFT(nftData);
-    res.status(200).json({ message: "replicate webhook is completed event" });
-  } else {
-    console.info("replicate webhook is not completed event");
-    res
-      .status(200)
-      .json({ message: "replicate webhook is not completed event" });
-  }
+  res.status(200).json({ message: "replicate webhook is completed event" });
+  console.log("replicate webhook is completed event");
 });
 export default handler;
