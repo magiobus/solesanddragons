@@ -34,9 +34,9 @@ handler.post(async (req, res) => {
 
     //answer to replicate webhook becauyse if they not have a repsonse they are gonna try every 5 seconds.
     //and start creating nft after 5 seconds.
-    res.status(200).json({ message: "replicate webhook is completed event" });
     console.log("replicate webhook is completed event");
-    metaplexlib.createNFT(nftData);
+    await metaplexlib.createNFT(nftData);
+    res.status(200).json({ message: "replicate webhook is completed event" });
   } else {
     console.info("replicate webhook is not completed event");
     res
