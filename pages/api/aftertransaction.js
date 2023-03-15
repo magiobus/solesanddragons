@@ -2,8 +2,7 @@
 import chatgptlib from "@/lib/chatgptlib";
 import replicateLib from "@/lib/replicateLib";
 
-const baseUrl =
-  process.env.NEXT_PUBLIC_BASE_URL || "https://7d71-187-188-243-106.ngrok.io";
+const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000";
 
 export default async function handler(req, res) {
   //if is not post
@@ -23,10 +22,11 @@ export default async function handler(req, res) {
   //Stats generation with chatgpt api
   const messages = [
     {
-      role: "assistant",
+      role: "system",
       content:
-        "You are a system that generates valid JSON objects as stats for a D&D v5 characters.",
+        " You are a system that generates valid JSON objects as stats for a D&D v5 characters. You only return a Valid JSON Object as a response. You can use the following template to generate the JSON object. ```json {} ``` ",
     },
+
     {
       role: "user",
       content: `Generate a valid JSON object for a dnd v5 character. The name of the character is ${name}, and is a ${gender} ${race} ${_class}, it should have abilityScores, skills, equipment, features, background, personalityTraits, ideals, bonds and flaws. Remember that if the class is paladin or cleric the character should have a deity and you should only return the JSON Object as a response`,

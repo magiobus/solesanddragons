@@ -7,9 +7,10 @@ import { AuthContext } from "@/components/AuthProvider";
 import { useContext } from "react";
 import { CheckCircleIcon } from "@heroicons/react/outline";
 import axios from "axios";
+const price = process.env.NEXT_PUBLIC_MINTING_PRICE;
 
 const MainForm = () => {
-  const { publicKey, signIn, sendTransaction, signSignature } =
+  const { publicKey, signIn, sendTransaction, LAMPORTS_PER_SOL } =
     useContext(AuthContext);
 
   const {
@@ -28,8 +29,6 @@ const MainForm = () => {
     setStatusText(
       "Please approve the transaction and wait for it to be confirmed, this may take a few minutes"
     );
-
-    const price = 0.01;
 
     try {
       const explorerLink = await sendTransaction(price, data);
@@ -266,7 +265,7 @@ const MainForm = () => {
                     disabled={isLoading}
                   >
                     <div className="loadingcontainer flex justify-center items-center w-full  m-0 ">
-                      Pay 1 USDC
+                      Pay {price} SOL
                     </div>
                   </button>
                 </div>

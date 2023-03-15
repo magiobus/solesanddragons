@@ -172,6 +172,7 @@ const AuthContextProvider = (props) => {
         signOut,
         sendTransaction,
         signSignature,
+        LAMPORTS_PER_SOL,
       }}
     >
       {props.children}
