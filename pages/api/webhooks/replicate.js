@@ -24,17 +24,12 @@ export default async function handler(req, res) {
     console.info("Replicate wbehook trigerred");
 
     //CREATE NFT HERE AND SEND TO WALLET
-    console.log("answered to replicate, creating nft...");
-    const nftcreated = await metaplexlib.createNFT(nftData);
-    console.info("NFT created, answering webhook, ", nftcreated);
+    metaplexlib.createNFT(nftData);
+    console.info(
+      "NFT creation process in the background...., answering to replicate"
+    );
+    res.status(200).json({ message: "replicate webhook is completed event" });
     //answer to replicate webhook
-    try {
-      res.status(200).json({ message: "replicate webhook answered" });
-    } catch (error) {
-      console.error("replicate wbehook error =>", error);
-      res.status(500).json({ message: "probably didnt get statsString" });
-    }
-    return;
   } else {
     console.info("replicate webhook is not completed event");
     res
