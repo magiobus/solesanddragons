@@ -62,8 +62,15 @@ export default async function handler(req, res) {
 
       console.log("webhook URL =>", webhook);
 
-      await replicateLib.generateImage(prompt, negativePrompt, webhook);
-      console.info("Stable Difussion JOB Sent, wiating for webhook....");
+      const replicateResponse = await replicateLib.generateImage(
+        prompt,
+        negativePrompt,
+        webhook
+      );
+      console.info(
+        "Stable Difussion JOB Sent, wiating for webhook....",
+        replicateResponse
+      );
 
       res.status(200).json({ message: "Chatgpt + replicate webhook done" });
     } else {
