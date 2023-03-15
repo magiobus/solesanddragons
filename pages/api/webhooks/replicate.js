@@ -22,13 +22,13 @@ export default async function handler(req, res) {
     };
 
     console.info("Replicate wbehook trigerred");
+    res.status(200).json({ message: "Replicate wbehook trigerred" });
+    if (res.finished) {
+      console.log("res finished");
+      await metaplexlib.createNFT(nftData);
+    }
 
     //CREATE NFT HERE AND SEND TO WALLET
-    metaplexlib.createNFT(nftData);
-    console.info(
-      "NFT creation process in the background...., answering to replicate"
-    );
-    res.status(200).json({ message: "replicate webhook is completed event" });
     //answer to replicate webhook
   } else {
     console.info("replicate webhook is not completed event");
