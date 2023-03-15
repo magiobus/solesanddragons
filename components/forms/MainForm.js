@@ -316,15 +316,23 @@ const MainForm = () => {
         )
       ) : (
         //Este es el else del useState de arriba
-        <div
-          className="walletbutton bg-purple-600 text-white py-4  font-bold cursor-pointer "
-          disabled={isLoading}
-          onClick={() => {
-            signIn();
-          }}
-        >
-          <button>Connect your wallet 👻</button>
-        </div>
+        <>
+          <div
+            className="walletbutton bg-purple-600 text-white py-4  font-bold cursor-pointer "
+            disabled={isLoading}
+            onClick={() => {
+              signIn();
+            }}
+          >
+            <button>Connect your wallet 👻</button>
+          </div>
+          <p className="italic my-4">
+            This Website runs on the{" "}
+            <span className="font-bold">
+              Solana {process.env.NEXT_PUBLIC_SOLANA_NETWORK}
+            </span>
+          </p>
+        </>
       )}
     </div>
   );

@@ -1,7 +1,6 @@
 import nc from "next-connect";
 import ncoptions from "@/config/ncoptions";
 import metaplexlib from "@/lib/metaplexlib";
-import { findCandyMachinesV2ByPublicKeyFieldOperation } from "@metaplex-foundation/js";
 
 const handler = nc(ncoptions);
 
