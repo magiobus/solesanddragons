@@ -16,7 +16,7 @@ handler.post(async (req, res) => {
   console.log("req.body =>", req.body);
   const { stats, explorerLink, imageUrl, publicKey } = req.body;
 
-  if ((!stats || !explorerLink || !photo, !publicKey)) {
+  if ((!stats || !explorerLink || !imageUrl, !publicKey)) {
     return res.status(400).json({ message: "Bad request mint nft" });
   }
 
@@ -32,7 +32,7 @@ handler.post(async (req, res) => {
 
   //answer to replicate webhook becauyse if they not have a repsonse they are gonna try every 5 seconds.
   //and start creating nft after 5 seconds.
-  console.log("mint nfts before create nft");
+  console.log("mint nfts before create nft", nftData);
   try {
     await metaplexlib.createNFT(nftData);
     res.status(200).json({ message: "mint nfts before create nft, after" });
